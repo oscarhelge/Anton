@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="sv" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3 i rad</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!--
+    Liten skriptsnutt som körs direkt, innan sidan ritas upp.
+    Den sätter rätt tema (ljust/mörkt) med en gång så att sidan
+    inte hinner blinka till i fel färger när man laddar om.
+  -->
+  <script>
+    (function () {
+      var sparatTema = null;
+      // localStorage kan vara avstängt i vissa webblasarlagen, darfor try/catch.
+      try {
+        sparatTema = localStorage.getItem("treIRad.tema");
+      } catch (fel) {
+        sparatTema = null;
+      }
+      var foredrarMorkt = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var tema = sparatTema || (foredrarMorkt ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", tema);
+    })();
+  </script>
+</head>
+
+<body>
+  <main class="behallare">
+
+    <!-- Rubrik och knapp för att byta mellan mörkt och ljust tema -->
+    <header class="topp">
+      <h1 class="rubrik">3 i rad</h1>
+      <button id="temaKnapp" class="ikonknapp" type="button" aria-label="Byt tema">
+        <span id="temaIkon" aria-hidden="true">🌙</span>
+      </button>
+    </header>
+
+    <!-- Inställningar: spelläge och svårighetsgrad -->
+    <section class="installningar" aria-label="Inställningar">
+      <div class="installning">
+        <label for="lageVal">Spelläge</label>
+        <select id="lageVal">
+          <option value="tva">Två spelare</option>
+          <option value="dator">Mot datorn</option>
+        </select>
+      </div>
+
+      <!-- Denna ruta göms när man spelar två spelare mot varandra -->
+      <div class="installning" id="svarighetsBox" hidden>
+        <label for="svarighetVal">Svårighetsgrad</label>
+        <select id="svarighetVal">
+          <option value="latt">Lätt</option>
+          <option value="medel">Medel</option>
+          <option value="svar">Svår</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Textrad som talar om vems tur det är, eller vem som vann -->
+    <p id="statusText" class="status" role="status" aria-live="polite">Tur: Spelare X</p>
+
+    <!-- Själva spelplanen. De nio rutorna skapas av script.js -->
+    <div id="spelplan" class="spelplan" role="group" aria-label="Spelplan 3 gånger 3"></div>
+
+    <!-- Poängtavla för hela sessionen -->
+    <section class="poangtavla" aria-label="Poäng">
+      <div class="poangruta">
+        <span class="poangetikett" id="etikettX">Spelare X</span>
+        <span class="poangsiffra" id="poangX">0</span>
+      </div>
+      <div class="poangruta">
+        <span class="poangetikett" id="etikettOavgjort">Oavgjort</span>
+        <span class="poangsiffra" id="poangOavgjort">0</span>
+      </div>
+      <div class="poangruta">
+        <span class="poangetikett" id="etikettO">Spelare O</span>
+        <span class="poangsiffra" id="poangO">0</span>
+      </div>
+    </section>
+
+    <!-- Knappar för att styra spelet -->
+    <section class="knapprad">
+      <button id="nyOmgangKnapp" class="knapp knapp--primar" type="button">Ny omgång</button>
+      <button id="angraKnapp" class="knapp" type="button">Ångra drag</button>
+      <button id="nollstallKnapp" class="knapp" type="button">Nollställ poäng</button>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

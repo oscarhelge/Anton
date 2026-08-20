@@ -1,0 +1,376 @@
+/* =========================================================
+   3 i rad – stilmall
+   Filen är uppdelad i:
+   1. Färgvariabler (tema)
+   2. Grundläggande sidlayout
+   3. Inställningar och status
+   4. Spelplanen
+   5. Poängtavla och knappar
+   6. Animationer
+   7. Anpassning för små skärmar
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. Färgvariabler
+   Alla färger samlas här som CSS-variabler. Det gör att vi
+   kan byta hela temat genom att bara byta värdena.
+   --------------------------------------------------------- */
+
+/* Ljust tema (standard) */
+:root {
+  --bakgrund: #f2f4f8;
+  --panel: #ffffff;
+  --panel-kant: #dfe3ea;
+  --text: #1b1f27;
+  --text-svag: #5f6775;
+  --ruta-bakgrund: #ffffff;
+  --ruta-kant: #d5dae3;
+  --ruta-hover: #eef1f6;
+  --accent: #3b6ef6;
+  --accent-text: #ffffff;
+  --farg-x: #2f6df3;
+  --farg-o: #e0603a;
+  --vinnarfarg: #2fb37a;
+  --skugga: 0 2px 10px rgba(20, 30, 50, 0.08);
+}
+
+/* Mörkt tema – samma variabler, andra värden */
+[data-theme="dark"] {
+  --bakgrund: #14171d;
+  --panel: #1d2128;
+  --panel-kant: #2c313b;
+  --text: #eaedf2;
+  --text-svag: #98a1b0;
+  --ruta-bakgrund: #232830;
+  --ruta-kant: #333a45;
+  --ruta-hover: #2c323c;
+  --accent: #5b87ff;
+  --accent-text: #0f1115;
+  --farg-x: #6fa0ff;
+  --farg-o: #ff8f6b;
+  --vinnarfarg: #3ddc9a;
+  --skugga: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------------------------------------------------------
+   2. Grundläggande sidlayout
+   --------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+/* Element med attributet hidden ska alltid vara dolda. Utan den här
+   regeln vinner till exempel "display: flex" nedan över hidden, och
+   svårighetsgraden skulle synas även i tvåspelarläget. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem 1rem 3rem;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bakgrund);
+  color: var(--text);
+  /* Mjuk övergång när man byter tema */
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Innehållet centreras och får en maxbredd på stora skärmar */
+.behallare {
+  max-width: 460px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.topp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rubrik {
+  margin: 0;
+  font-size: 1.9rem;
+  letter-spacing: -0.5px;
+}
+
+/* Rund knapp uppe till höger för temabyte */
+.ikonknapp {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-kant);
+  background-color: var(--panel);
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--skugga);
+  transition: transform 0.15s ease, background-color 0.25s ease;
+}
+
+.ikonknapp:hover {
+  transform: rotate(-15deg) scale(1.06);
+}
+
+/* ---------------------------------------------------------
+   3. Inställningar och status
+   --------------------------------------------------------- */
+
+.installningar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.installning {
+  flex: 1 1 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.installning label {
+  font-size: 0.8rem;
+  color: var(--text-svag);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.installning select {
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--panel-kant);
+  background-color: var(--panel);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Statusraden: "Tur: Spelare X", "Du vann!" och så vidare */
+.status {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background-color: var(--panel);
+  border: 1px solid var(--panel-kant);
+  box-shadow: var(--skugga);
+  min-height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Extra tydlig statusrad när någon har vunnit */
+.status.status--vinst {
+  color: var(--vinnarfarg);
+  border-color: var(--vinnarfarg);
+}
+
+/* ---------------------------------------------------------
+   4. Spelplanen
+   --------------------------------------------------------- */
+
+.spelplan {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  /* aspect-ratio gör att planen alltid blir kvadratisk */
+  aspect-ratio: 1 / 1;
+}
+
+/* En enskild ruta i rutnätet */
+.ruta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ruta-kant);
+  border-radius: 14px;
+  background-color: var(--ruta-bakgrund);
+  font-size: clamp(2.5rem, 14vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  color: var(--text);
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              transform 0.1s ease;
+}
+
+.ruta:hover:not(:disabled) {
+  background-color: var(--ruta-hover);
+}
+
+.ruta:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* En upptagen ruta går inte att klicka på, men ska ändå synas tydligt */
+.ruta:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+/* Färgerna för X och O */
+.ruta.spelare-x {
+  color: var(--farg-x);
+}
+
+.ruta.spelare-o {
+  color: var(--farg-o);
+}
+
+/* Rutorna i den vinnande raden markeras med grön ram och bakgrund */
+.ruta.vinnande {
+  border-color: var(--vinnarfarg);
+  /* Första raden är en reserv för äldre webbläsare som inte kan color-mix. */
+  background-color: var(--ruta-hover);
+  background-color: color-mix(in srgb, var(--vinnarfarg) 18%, var(--ruta-bakgrund));
+}
+
+/* Rutor som inte ingår i vinstraden tonas ned lite */
+.spelplan.har-vinnare .ruta:not(.vinnande) {
+  opacity: 0.45;
+}
+
+/* ---------------------------------------------------------
+   5. Poängtavla och knappar
+   --------------------------------------------------------- */
+
+.poangtavla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.poangruta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.7rem 0.4rem;
+  border-radius: 12px;
+  background-color: var(--panel);
+  border: 1px solid var(--panel-kant);
+  box-shadow: var(--skugga);
+}
+
+.poangetikett {
+  font-size: 0.75rem;
+  color: var(--text-svag);
+  text-align: center;
+}
+
+.poangsiffra {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.knapprad {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.knapp {
+  flex: 1 1 120px;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--panel-kant);
+  background-color: var(--panel);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.2s ease;
+}
+
+.knapp:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.knapp:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Den viktigaste knappen får accentfärgen */
+.knapp--primar {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ---------------------------------------------------------
+   6. Animationer
+   --------------------------------------------------------- */
+
+/* Ett nytt X eller O poppar fram i stället för att bara dyka upp */
+@keyframes poppaFram {
+  from {
+    transform: scale(0.2) rotate(-12deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.ruta .markering {
+  display: block;
+  animation: poppaFram 0.22s ease-out;
+}
+
+/* Vinstraden pulserar några gånger och blir sedan stilla */
+@keyframes vinnarpuls {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.09);
+  }
+}
+
+.ruta.vinnande {
+  animation: vinnarpuls 0.55s ease-in-out 3;
+}
+
+/* Om användaren har valt att minska rörelser i systemet stänger vi
+   av animationerna helt. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   7. Anpassning för små skärmar
+   --------------------------------------------------------- */
+
+@media (max-width: 380px) {
+  body {
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .rubrik {
+    font-size: 1.6rem;
+  }
+
+  .spelplan {
+    gap: 7px;
+  }
+
+  .knapp {
+    flex: 1 1 100%;
+  }
+}
