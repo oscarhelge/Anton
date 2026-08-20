@@ -57,3 +57,15 @@ går att läsa uppifrån och ner.
   olika saker i de två lägena (Spelare X/O respektive du/datorn).
 - **Poängen sparas inte** mellan sidladdningar – den gäller för sessionen.
   Bara temavalet ligger kvar.
+
+## Utöver spelet
+
+Repot innehåller också en Claude Code-skill i `.claude/`:
+
+- `.claude/skills/superheroes/` – hur ett större arbete delas upp på flera
+  agenter som jobbar parallellt, och hur resultatet sätts ihop igen.
+- `.claude/agents/` – de fyra rollerna skillen använder: `scout` (spanar),
+  `oracle` (utreder), `forge` (bygger) och `warden` (granskar).
+
+Skillen har inget med spelet att göra – den laddas av Claude Code när du
+ber om att köra flera agenter på en uppgift.
